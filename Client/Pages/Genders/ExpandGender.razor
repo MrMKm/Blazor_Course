@@ -1,0 +1,49 @@
+﻿@page "/genders"
+@inject IGenderAPI genderAPI
+
+<h3>Genders</h3>
+
+@if (Loading)
+{
+    <img src="https://www.mansarovar.com.co/app/PQRS/LibraryCSS/giphy.gif" style="width:20px; height:20px" />
+}
+else
+{
+    @if (gendersDto.Any())
+    {
+        foreach (var gender in gendersDto)
+        {
+            <div class="mb-2">
+                <p>ID: @gender.ID</p>
+                <p>Name: @gender.Name</p>
+
+                <div class="mb-2">
+                    <a href="@($"gender/edit/{gender.ID}")" class="btn btn-secondary">Edit</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Genders not found...</p>
+    }
+
+    <div class="form-group">
+        <a class="btn btn-info" href="gender/add">Add Gender</a>
+    </div>
+}
+
+@code {
+    private List<GenderDto> gendersDto = new();
+
+    private bool Loading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Loading = true;
+
+        gendersDto = await genderAPI.GetAll();
+
+        Loading = false;
+    }
+}

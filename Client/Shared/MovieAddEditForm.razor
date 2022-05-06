@@ -1,0 +1,46 @@
+﻿<EditForm Model="Movie" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="form-group">
+        @if (Movie.Poster != null && Movie.Poster != "")
+        {
+            <img src="@Movie.Poster" alt="Poster" style="width: 225 px; height: 300px;" />
+        }
+    </div>
+
+    <div class="form-group">
+        <label>Title</label>
+        <InputText @bind-Value="Movie.Title"></InputText>
+        <ValidationMessage For="@(() => Movie.Title)" />
+    </div>
+
+    <div class="form-group">
+        <label>Release Date</label>
+        <InputDate @bind-Value="Movie.ReleaseDate"></InputDate>
+        <ValidationMessage For="@(() => Movie.ReleaseDate)" />
+    </div>
+
+    <div class="form-group">
+        <label>Poster (URL)</label>
+        <InputText @bind-Value="Movie.Poster"></InputText>
+    </div>
+
+    <MovieActorsComponent Movie="Movie"></MovieActorsComponent>
+
+    <MovieGendersComponent Movie="Movie"></MovieGendersComponent>
+
+    <button type="submit" class="btn btn-success">
+        <img src="https://www.mansarovar.com.co/app/PQRS/LibraryCSS/giphy.gif" style="width:20px; height:20px" class="@(Loading ? "" : "d-none")" />
+        Save
+    </button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public MovieDto Movie { get; set; }
+
+    [Parameter]
+    public bool Loading { get; set; }
+
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+}

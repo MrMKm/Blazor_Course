@@ -1,0 +1,54 @@
+﻿@using Entities.Model
+
+@typeparam T_Item
+
+<div>
+
+    @if (GenericList is null)
+    {
+        @if (ListNull is null)
+        {
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" />
+            <p>Loading...</p>
+        }
+        else
+        {
+            @ListNull
+        }
+    }
+    else if (!GenericList.Any())
+    {
+        if (ListEmpty is null)
+        {
+            <p>Movies not found...</p>
+        }
+        else
+        {
+            @ListEmpty
+        }
+    }
+    else
+    {
+        @foreach (var item in GenericList)
+        {
+            @ListAny(item);
+        }
+    }
+</div>
+
+@code {
+    // ChildContent name it's mandatory for individual RenderFragment
+    [Parameter]
+    public RenderFragment ListNull { get; set; }
+
+    [Parameter]
+    public RenderFragment ListEmpty { get; set; }
+
+    [Parameter]
+    public RenderFragment<T_Item> ListAny { get; set; }
+
+
+
+    [Parameter]
+    public List<T_Item> GenericList { get; set; }
+}

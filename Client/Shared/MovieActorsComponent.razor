@@ -1,0 +1,47 @@
+﻿@if (Movie.Actors != null)
+{
+    <div class="mb-3">
+        <label>Actors</label>
+        @foreach (var actor in Movie.Actors)
+        {
+            <div class="form-check">
+                @if (Movie.actorsID.Contains(actor.ID))
+                {
+                    <input class="form-check-input" type="checkbox" @onchange="eventArgs =>
+                            {
+                                if (!Movie.actorsID.Contains(actor.ID))
+                                {
+                                    Movie.actorsID.Add(actor.ID);
+                                }
+                                else
+                                {
+                                    Movie.actorsID.RemoveAll(a => a.Equals(actor.ID));
+                                }
+                            }" checked>
+                }
+                else
+                {
+                    <input class="form-check-input" type="checkbox" @onchange="eventArgs =>
+                            {
+                                if (!Movie.actorsID.Contains(actor.ID))
+                                {
+                                    Movie.actorsID.Add(actor.ID);
+                                }
+                                else
+                                {
+                                    Movie.actorsID.RemoveAll(a => a.Equals(actor.ID));
+                                }
+                            }">
+                }
+                <label class="form-check-label">
+                    @actor.FirstName @actor.LastName
+                </label>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public MovieDto Movie { get; set; }
+}

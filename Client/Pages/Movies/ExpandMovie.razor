@@ -1,0 +1,68 @@
+﻿@page "/movies"
+@inject IMovieAPI movieAPI
+@inject IActorAPI actorAPI
+@inject NavigationManager navigationManager
+
+<h3>Movies</h3>
+
+@if (Loading)
+{
+    <img src="https://www.mansarovar.com.co/app/PQRS/LibraryCSS/giphy.gif" style="width:20px; height:20px" />
+}
+else
+{
+    @if (MoviesDto.Any())
+    {
+        foreach (var Movie in MoviesDto)
+        {
+            <div class="mb-2">
+                <img src="@Movie.Poster" alt="Poster" style="width: 225 px; height: 300px;" />
+                <p>ID: @Movie.ID</p>
+                <p>Title: @Movie.Title</p>
+                <p>Release date: @Movie.ReleaseDate.GetValueOrDefault().ToShortDateString()</p>
+                <div>
+                    <p>Actors list: </p>
+                    @foreach(var actor in Movie.Actors)
+                    {
+                        <p>Actor Name: @actor.FirstName @actor.LastName</p>
+                    }
+                </div>
+
+                 <div>
+                    <p>Gender list: </p>
+                    @foreach(var gender in Movie.Genders)
+                    {
+                        <p>Gender: @gender.Name</p>
+                    }
+                </div>
+
+                <div class="mb-2">
+                    <a href="@($"Movie/edit/{Movie.ID}")" class="btn btn-secondary">Edit</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Movies not found...</p>
+    }
+
+    <div class="form-group">
+        <a class="btn btn-info" href="Movie/add">Add Movie</a>
+    </div>
+}
+
+@code {
+    private List<MovieDto> MoviesDto = new();
+
+    private bool Loading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Loading = true;
+
+        MoviesDto = await movieAPI.GetAll();
+
+        Loading = false;
+    }
+}

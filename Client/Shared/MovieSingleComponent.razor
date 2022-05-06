@@ -1,0 +1,27 @@
+﻿@using Entities.Model;
+
+<div>
+    <a href="movie">
+        <img src="@Movie.Poster" alt="Poster" style="width: 225 px; height: 300px;"/>
+    </a>
+    <p><a href="movie">@Movie.TitleFit</a></p>
+
+    <p>@Movie.Title</p>
+    <p>@Movie.ReleaseDate.ToShortDateString()</p>
+
+    <div>
+        <a class="btn btn-info">Edit</a>
+        <button class="" @onclick="() => DeleteMovie.InvokeAsync(Movie)">Delete</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Movie Movie { get; set; }
+
+    [Parameter]
+    public bool showButton { get; set; }
+
+    [Parameter]
+    public EventCallback<Movie> DeleteMovie { get; set; }
+}

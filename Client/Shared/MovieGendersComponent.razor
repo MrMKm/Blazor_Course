@@ -1,0 +1,47 @@
+﻿@if (Movie.Genders != null)
+{
+    <div class="mb-3">
+        <label>Genders</label>
+        @foreach (var gender in Movie.Genders)
+        {
+            <div class="form-check">
+                @if (Movie.gendersID.Contains(gender.ID))
+                {
+                    <input class="form-check-input" type="checkbox" @onchange="eventArgs =>
+                            {
+                                if (!Movie.gendersID.Contains(gender.ID))
+                                {
+                                    Movie.gendersID.Add(gender.ID);
+                                }
+                                else
+                                {
+                                    Movie.gendersID.RemoveAll(g => g.Equals(gender.ID));
+                                }
+                            }" checked>
+                }
+                else
+                {
+                    <input class="form-check-input" type="checkbox" @onchange="eventArgs =>
+                            {
+                                if (!Movie.gendersID.Contains(gender.ID))
+                                {
+                                    Movie.gendersID.Add(gender.ID);
+                                }
+                                else
+                                {
+                                    Movie.gendersID.RemoveAll(g => g.Equals(gender.ID));
+                                }
+                            }">
+                }
+                <label class="form-check-label">
+                    @gender.Name
+                </label>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public MovieDto Movie { get; set; }
+}

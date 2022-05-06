@@ -1,0 +1,50 @@
+﻿@page "/actor/edit/{ActorID:int}"
+@inject IActorAPI actorAPI
+@inject NavigationManager navigationManager
+
+<h3>Edit Actor</h3>
+
+<ActorAddEditForm Actor="Actor" OnValidSubmit="Edit" Loading="Loading">
+</ActorAddEditForm>
+
+@if (showError)
+{
+    <p style="color: red">Something went wrong... try again!</p>
+}
+
+@code {
+    private ActorDto Actor = new();
+
+    [Parameter]
+    public int ActorID { get; set; }
+
+    public bool Loading = false;
+
+    private bool showError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Actor = await actorAPI.GetByID(ActorID);
+    }
+
+    private async Task Edit()
+    {
+        showError = false;
+
+        Loading = true;
+
+        var result = await actorAPI.EditActor(Actor);
+
+        if (result is null)
+        {
+            navigationManager.NavigateTo("actors");
+        }
+        else
+        {
+            showError = true;
+            Console.WriteLine(result);
+        }
+
+        Loading = false;
+    }
+}

@@ -1,0 +1,32 @@
+﻿@page "/"
+@using Entities.Model
+
+
+@inject ServiceSingleton singleton
+@inject IMovieAPI movieAPI
+
+<p>Singleton count: @singleton.Value</p>
+
+<MovieListComponent Movies="Movies" />
+
+<div>
+    <button @onclick="AddMovie">Add movie</button>
+</div>
+
+@code{
+    private List<Movie> Movies { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Movies = movieAPI.GetMovies();
+    }
+
+    private void AddMovie()
+    {
+        //Movies.Add(new Movie
+        //{
+        //    Title = "Test",
+        //    ReleaseDate = DateTime.Today
+        //});
+    }
+}

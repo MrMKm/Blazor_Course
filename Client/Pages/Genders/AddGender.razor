@@ -1,0 +1,53 @@
+﻿@page "/gender/add"
+@inject IGenderAPI genderAPI
+@inject NavigationManager navigationManager
+
+<h3>Add new gender</h3>
+
+<EditForm Model="Gender" OnValidSubmit="Add">
+    <FluentValidationValidator></FluentValidationValidator>
+    <div class="form-group">
+        <label>Name</label>
+        <InputText @bind-Value="Gender.Name"></InputText>
+        <ValidationMessage For="@(() => Gender.Name)" />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+    <img src="https://www.mansarovar.com.co/app/PQRS/LibraryCSS/giphy.gif" style="width:20px; height:20px" class="@(Loading ? "" : "d-none")"/>
+    Save</button>
+</EditForm>
+
+@if(showError)
+{
+    <p style="color: red">Something went wrong... try again!</p>
+}
+
+@code {
+    private GenderDto Gender = new GenderDto();
+
+    public bool Loading = false;
+
+    private bool showError = false;
+
+    private async Task Add()
+    {
+        showError = false;
+
+        Loading = true;
+
+        var result = await genderAPI.AddGender(Gender);
+
+        if(result is null)
+        {
+            navigationManager.NavigateTo("genders");
+        }
+
+        else
+        {
+            showError = true;
+            Console.WriteLine(result);
+        }
+
+        Loading = false;
+    }
+}

@@ -1,0 +1,36 @@
+﻿@inject IJSRuntime js
+
+@using Entities.Model
+
+<div style="display: flex; flex-wrap: wrap; align-items: center;">
+    <GenericListComponent GenericList="Movies">
+        <ListAny Context="movie">
+            <MovieSingleComponent Movie="movie" DeleteMovie="DeleteMovie"></MovieSingleComponent>
+        </ListAny>
+    </GenericListComponent>
+</div>
+
+@code {
+    [Parameter]
+    public List<Movie> Movies { get; set; }
+
+    // ChildContent name it's mandatory for individual RenderFragment 
+    [Parameter]
+    public RenderFragment NullList { get; set; }
+
+    [Parameter]
+    public RenderFragment EmptyList { get; set; }
+
+    private async Task DeleteMovie(Movie movie)
+    {
+        bool confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to remove {movie.Title}?");
+
+        if(confirm)
+        {
+            Movies.Remove(movie);
+            Console.WriteLine($"Movie {movie.Title} deleted...");
+
+            await js.InvokeVoidAsync("console.log", $"Movie {movie.Title} deleted...");
+        }
+    }
+}

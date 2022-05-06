@@ -1,0 +1,43 @@
+﻿@page "/actor/add"
+@inject IActorAPI actorAPI
+@inject NavigationManager navigationManager
+
+<h3>Add new Actor</h3>
+
+<ActorAddEditForm Actor="Actor" OnValidSubmit="Add" Loading="Loading">
+</ActorAddEditForm>
+
+@if (showError)
+{
+    <p style="color: red">Something went wrong... try again!</p>
+}
+
+@code {
+    private ActorDto Actor = new ActorDto();
+
+    public bool Loading = false;
+
+    private bool showError = false;
+
+    private async Task Add()
+    {
+        showError = false;
+
+        Loading = true;
+
+        var result = await actorAPI.AddActor(Actor);
+
+        if (result is null)
+        {
+            navigationManager.NavigateTo("actors");
+        }
+
+        else
+        {
+            showError = true;
+            Console.WriteLine(result);
+        }
+
+        Loading = false;
+    }
+}

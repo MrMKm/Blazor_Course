@@ -1,0 +1,43 @@
+﻿@page "/movie/add"
+
+@inject IMovieAPI movieAPI
+@inject IActorAPI actorAPI
+@inject IGenderAPI genderAPI
+@inject NavigationManager navigationManager
+
+<h3>Add new Movie</h3>
+
+<MovieAddEditForm Movie="Movie" OnValidSubmit="Add" Loading="Loading"></MovieAddEditForm>
+
+@if (showError)
+{
+    <p style="color: red">Something went wrong... try again!</p>
+}
+
+@code {
+    private MovieDto Movie;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Movie = new();
+        Movie.Actors = await actorAPI.GetAll();
+        Movie.Genders = await genderAPI.GetAll();
+    }
+
+    public bool Loading = false;
+
+    private bool showError = false;
+
+    private async Task Add()
+    {
+        showError = false;
+
+        Loading = true;
+
+        var result = await movieAPI.AddMovie(Movie);
+
+        navigationManager.NavigateTo("movies");
+
+        Loading = false;
+    }
+}

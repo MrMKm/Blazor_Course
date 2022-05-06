@@ -1,0 +1,52 @@
+﻿@page "/actors"
+@inject IActorAPI actorAPI
+
+<h3>Actors</h3>
+
+@if (Loading)
+{
+    <img src="https://www.mansarovar.com.co/app/PQRS/LibraryCSS/giphy.gif" style="width:20px; height:20px" />
+}
+else
+{
+    @if (ActorsDto.Any())
+    {
+        foreach (var Actor in ActorsDto)
+        {
+            <div class="mb-2">
+                <img src="@Actor.Photo" alt="Photo" style="width: 225 px; height: 300px;" />
+                <p>ID: @Actor.ID</p>
+                <p>Name: @Actor.FirstName @Actor.LastName</p>
+                <p>Birth date: @Actor.BirthDate.GetValueOrDefault().ToShortDateString()</p>
+
+                <div class="mb-2">
+                    <a href="@($"actor/edit/{Actor.ID}")" class="btn btn-secondary">Edit</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Actors not found...</p>
+    }
+
+    <div class="form-group">
+        <a class="btn btn-info" href="actor/add">Add Actor</a>
+    </div>
+}
+
+@code {
+    private List<ActorDto> ActorsDto = new();
+
+    private bool Loading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Loading = true;
+
+        ActorsDto = await actorAPI.GetAll();
+
+        Loading = false;
+    }
+}
+
